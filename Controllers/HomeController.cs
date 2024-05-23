@@ -1,4 +1,4 @@
-using API.Models;
+using API.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
