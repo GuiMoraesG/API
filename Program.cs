@@ -6,9 +6,7 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 36)));
 });
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -27,8 +25,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllers();
 
 app.Run();
