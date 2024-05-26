@@ -54,7 +54,7 @@ namespace API.Repository
             return stockModel;
         }
 
-        public async Task<Stock> DeleteAsync(int id)
+        public async Task<Stock?> DeleteAsync(int id)
         {
             var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
