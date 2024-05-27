@@ -30,6 +30,14 @@ namespace API.Repository
                 stock = stock.Where(s => s.CompanyName.Contains(query.CompanyName));
             }
 
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if (query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
+                {
+                    stock = query.IsDecsending ? stock.OrderByDescending(s => s.Symbol) : stock.OrderBy(s => s.Symbol);
+                }
+            }
+
             return await stock.ToListAsync();
         }
 
