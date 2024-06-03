@@ -1,6 +1,10 @@
 ﻿using API.Dtos.Comments;
+using API.Extension;
 using API.Interfaces;
 using API.Mappers;
+using API.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -11,11 +15,13 @@ namespace API.Controllers
     {
         private readonly ICommentsRepository _commentsRepo;
         private readonly IStockRepository _stockRepo;
+        private readonly UserManager<AppUser> _userManager;
 
-        public CommentsController(ICommentsRepository commentsRepo, IStockRepository stockRepo)
+        public CommentsController(ICommentsRepository commentsRepo, IStockRepository stockRepo, UserManager<AppUser> userManager)
         {
             _commentsRepo = commentsRepo;
             _stockRepo = stockRepo;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -41,6 +47,7 @@ namespace API.Controllers
         }
 
         [HttpPost("{stockId:int}")]
+        [Authorize]
         public async Task<IActionResult> Create([FromRoute] int stockId, CreateCommentsDto createDto)
         {
             if (!ModelState.IsValid)
@@ -53,7 +60,11 @@ namespace API.Controllers
                 return BadRequest("Stock does not exist");
             }
 
+            var userName = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(userName);
             var commentModel = createDto.ToCommentsFromCreate(stockId);
+
+            commentModel.AppUserId = appUser.Id;
 
             await _commentsRepo.CreateAsync(commentModel);
 

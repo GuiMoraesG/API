@@ -13,6 +13,7 @@ namespace API.Mappers
                 Title = commentsModel.Title,
                 Content = commentsModel.Content,
                 CreatedOn = commentsModel.CreatedOn,
+                CreatedBy = commentsModel.AppUser.UserName,
                 StockId = commentsModel.StockId,
             };
         }
